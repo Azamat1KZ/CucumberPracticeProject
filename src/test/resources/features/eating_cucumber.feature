@@ -3,7 +3,7 @@ Feature: Eating too many cucumbers may not be good for you
   user story: Eating too much of anything may not be good for you
 
 
-  @eating
+  @eating @smoke
   Scenario: Eating a few cucumbers is not a problem
     Given John is hungry
     When he eats some cucumbers

@@ -1,6 +1,10 @@
 package com.cydeo.step_definitions;
 
+import com.cydeo.pages.AllOrdersPage;
+import com.cydeo.pages.BasePage;
 import com.cydeo.pages.WebTableLoginPage;
+import com.cydeo.pages.WebTableOrderPage;
+import com.cydeo.utilities.BrowserUtils;
 import com.cydeo.utilities.ConfigurationReader;
 import com.cydeo.utilities.Driver;
 import io.cucumber.java.en.And;
@@ -8,6 +12,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.Map;
 
@@ -47,8 +53,8 @@ public class WebTableLoginStepDef {
 
     @Then("user should see url contains orders")
     public void user_should_see_url_contains_orders() {
+        Assert.assertTrue(Driver.getDriver().getCurrentUrl().contains("cydeo"));
 
-        Assert.assertTrue(Driver.getDriver().getCurrentUrl().contains("orders"));
     }
 
 

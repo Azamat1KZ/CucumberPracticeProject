@@ -15,42 +15,42 @@ public class Driver {
 
     //2. We make WebDriver private, because we want to close access from outside the class
     // We make it static, because we will use it inside static method
-    private static WebDriver driver; //value is null by default
+    //private static WebDriver driver; //value is null by default
+    private static InheritableThreadLocal<WebDriver> driverPool = new InheritableThreadLocal<>(); // we are using driver pool now
 
     //create a re-usable utility method which will return same driver instance when we call it
     public static WebDriver getDriver() {
 
         //it will check if driver is null and if it is we will set up browser inside if statement
         //if you already set up driver using it again for following line of codes, it will return to same driver
-        if (driver == null) {
+        if (driverPool.get() == null) {
             //We read browserType from configuration.properties with help of Configuration class' getProperty("browser")
             String browserType = ConfigurationReader.getProperty("browser");
 
-            switch (browserType){
+            switch (browserType) {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                    driverPool.set(new ChromeDriver());
+                    driverPool.get().manage().window().maximize();
+                    driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
                     break;
                 case "firefox":
                     WebDriverManager.chromedriver().setup();
-                    driver = new FirefoxDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                    driverPool.set(new FirefoxDriver());
+                    driverPool.get().manage().window().maximize();
+                    driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
                     break;
             }
         }
-        return driver;
+        return driverPool.get();
 
     }
 
     // This method will make sure our driver value is always null after using quit() method
-    public static void closeDriver(){
-        if(driver != null){
-            driver.quit(); // this line will terminate the existing driver session. with using this driver will not be even null
-            driver = null;
+    public static void closeDriver() {
+        if (driverPool.get() != null) {
+            driverPool.get().quit(); // this line will terminate the existing driver session. with using this driver will not be even null
+            driverPool.remove(); // diver = null
         }
-
     }
 }
